@@ -88,11 +88,11 @@ export interface ICart {
 
 /**
  * Представляет структуру формы.
- * @interface IForm
+ * @interface IModal
  * @param {Function} open - Открывает форму.
  * @param {Function} close - Закрывает форму.
  */
-export interface IForm {
+export interface IModal {
 	open(): void;
 	close(): void;
 }
