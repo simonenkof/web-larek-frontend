@@ -58,7 +58,7 @@ export interface IProduct {
 	image: string;
 	title: string;
 	category: string;
-	price: number;
+	price: number | null;
 }
 ```
 
@@ -104,6 +104,15 @@ export type TCartForm = Pick<IProduct, 'title' | 'price'>
 
 ```
 export type TProductCardForm = Pick<IProduct, 'title' | 'description' | 'image' | 'category' | 'price'>
+```
+
+Список запросов к апи
+
+```
+export type ApiListResponse<Type> = {
+	total: number;
+	items: Type[];
+};
 ```
 
 ---

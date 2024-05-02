@@ -14,7 +14,7 @@ export interface IProduct {
 	image: string;
 	title: string;
 	category: string;
-	price: number;
+	price: number | null;
 }
 
 /**
@@ -54,7 +54,7 @@ export interface ICustomerData {
  * @param {string[]} items - Список товаров.
  * @param {Function} order() - Оформляет заказ.
  */
-export interface IOrder {
+export interface IOrder extends ICustomerData {
 	total: number;
 	items: string[];
 	order(): void;
@@ -96,6 +96,12 @@ export interface IModal {
 	open(): void;
 	close(): void;
 }
+
+// Тип списка запросов к апи.
+export type ApiListResponse<Type> = {
+	total: number;
+	items: Type[];
+};
 
 // Тип для формы с доставкой и способом оплаты товара.
 export type TDeliveryForm = Pick<ICustomerData, 'payment' | 'address'>;
