@@ -323,7 +323,10 @@ export type ApiListResponse<Type> = {
 
 События изменения данных:
 
-- `cart:changed` - изменение в корзине.
+- `productList:changed` - каталог товаров изменен,
+- `cart:added` - добавление товара в корзниу,
+- `cart:removed` - удаление товара из корзины,
+- `cart:cleared` - очищение корзниы.
 
 События представления:
 
@@ -335,8 +338,6 @@ export type ApiListResponse<Type> = {
 - `contacntsModal:submit` - подтверждение данных личных контактов,
 - `order:create` - создание заказа из корзины,
 - `order:sent` - оформление заказа,
-- `product:added` - добавление товара в корзниу,
-- `product:removed` - удаление товара из корзины,
 - `payment:online` - выбор оплаты онлайн,
 - `payment:offline` - выбор оплаты при получении,
 - `productList:changed` - список товаров в каталоге изменен.
