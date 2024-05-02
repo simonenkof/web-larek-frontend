@@ -1,6 +1,6 @@
 import { IEvents } from './base/events';
-import { IOrder, IOrderSuccess } from '../types';
-import { Api } from './base/api';
+import { IOrder, IOrderSuccess, IApi } from '../types';
+import { AppApi } from './AppApi';
 
 /**
  * Представляет заказ товаров.
@@ -57,15 +57,15 @@ export class Order implements IOrder {
 
 	/**
 	 * Экземпляр Api.
-	 * @type {Api}
+	 * @type {IApi}
 	 */
-	protected api: Api;
+	protected api: AppApi;
 
 	/**
 	 * Создает экземпляр класса.
-	 * @param {IEvents} events - Экзампляр брокера событий.
+	 * @param {AppApi} events - Экзампляр брокера событий.
 	 */
-	constructor(events: IEvents, api: Api) {
+	constructor(events: IEvents, api: AppApi) {
 		this.events = events;
 		this.api = api;
 	}
@@ -181,7 +181,7 @@ export class Order implements IOrder {
 		};
 
 		this.api
-			.post('/order', orderPayload)
+			.sendOrder(orderPayload)
 			.then((res: IOrderSuccess) => this.events.emit('order:sent', { total: res.total }))
 			.catch((error) => console.error(error));
 	}

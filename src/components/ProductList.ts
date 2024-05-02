@@ -18,7 +18,7 @@ export class ProductList implements IProductList {
 	 * @type {IProduct[]}
 	 * @protected
 	 */
-	protected _products: IProduct[];
+	protected _items: IProduct[];
 
 	/**
 	 * Экземпляр брокера событий.
@@ -54,16 +54,16 @@ export class ProductList implements IProductList {
 	 * Возвращает массив товаров в списке.
 	 * @returns {IProduct[]} Массив товаров
 	 */
-	get products(): IProduct[] {
-		return this._products;
+	get items(): IProduct[] {
+		return this._items;
 	}
 
 	/**
 	 * Устанавливает массив товаров в списке. Генерирует событие "productList:changed".
 	 * @param {IProduct[]} productsArr - Новый массив товаров.
 	 */
-	set products(productsArr: IProduct[]) {
-		this._products = productsArr;
+	set items(productsArr: IProduct[]) {
+		this._items = productsArr;
 		this.total = productsArr.length;
 		this.events.emit('productList:changed');
 	}
@@ -75,6 +75,6 @@ export class ProductList implements IProductList {
 	 * @returns {IProduct | undefined} Товар или ничего
 	 */
 	getProduct(productId: string): IProduct | undefined {
-		return this.products.find((product) => product.id === productId);
+		return this.items.find((product) => product.id === productId);
 	}
 }

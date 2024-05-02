@@ -21,12 +21,12 @@ export interface IProduct {
  * Представляет структуру списка товаров.
  * @interface IProductList
  * @param {number} total - Количество товаров.
- * @param {IProduct[]} products - Массив всех товаров.
+ * @param {IProduct[]} items - Массив всех товаров.
  * @param {Function} getProduct() - Возвращает товар по id.
  */
 export interface IProductList {
 	total: number;
-	products: IProduct[];
+	items: IProduct[];
 	getProduct(productId: string): IProduct | undefined;
 }
 
@@ -95,6 +95,12 @@ export interface IModal {
 	close(): void;
 }
 
+export interface IApi {
+	baseUrl: string;
+	get<T>(uri: string): Promise<T>;
+	post<T>(uri: string, data: object): Promise<T>;
+}
+
 // Тип списка запросов к апи.
 export type ApiListResponse<Type> = {
 	total: number;
@@ -112,3 +118,9 @@ export type TCartForm = Pick<IProduct, 'title' | 'price'>;
 
 // Тип для формы карточки товара
 export type TProductCardForm = Pick<IProduct, 'title' | 'description' | 'image' | 'category' | 'price'>;
+
+// Тип для ответа сервера при получении всех товаров
+export type TProducts = Pick<IProductList, 'total' | 'items'>;
+
+// Тип для запроса об оформлении заказа к серверу
+export type TOrder = Pick<IOrder, 'payment' | 'email' | 'phone' | 'address' | 'total' | 'items'>;

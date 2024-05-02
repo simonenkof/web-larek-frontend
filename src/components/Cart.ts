@@ -3,7 +3,7 @@ import { IEvents } from './base/events';
 
 /**
  * Представляет корзину товаров.
- * @implements {IProductList}
+ * @implements {ICart}
  */
 export class Cart implements ICart {
 	/**
