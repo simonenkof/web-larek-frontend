@@ -7,4 +7,3 @@ import { IProduct } from './types';
 
 const events = new EventEmitter();
 const productList = new ProductList(events);
-const cart = new Cart(events);
