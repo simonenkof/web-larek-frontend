@@ -59,7 +59,7 @@ export class ProductList implements IProductList {
 	}
 
 	/**
-	 * Устанавливает массив товаров в списке.
+	 * Устанавливает массив товаров в списке. Генерирует событие "productList:changed".
 	 * @param {IProduct[]} productsArr - Новый массив товаров.
 	 */
 	set products(productsArr: IProduct[]) {
