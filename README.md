@@ -199,7 +199,7 @@ export type ApiListResponse<Type> = {
 
 Методы класса:
 
-- order(customerData: ICustomerData): void - принимает информацию о заказчике и совершает заказ.
+- order(): void - совершает заказ товаров.
 
 ---
 
