@@ -165,8 +165,7 @@ export type ApiListResponse<Type> = {
 
 Методы класса:
 
-- setProducts(): void - обращается к серверу и устанавливает массив товаров,
-- getProduct(productId: string): IProduct - возвращает данные товара по его идентификатору,
+- getProduct(productId: string): IProduct | undefined - возвращает данные товара по его идентификатору,
 - а так же сеттеры и геттеры для сохранения и получения данных из полей класса.
 
 #### Класс Cart
@@ -340,3 +339,4 @@ export type ApiListResponse<Type> = {
 - `product:removed` - удаление товара из корзины,
 - `payment:online` - выбор оплаты онлайн,
 - `payment:offline` - выбор оплаты при получении,
+- `productList:changed` - список товаров в каталоге изменен.

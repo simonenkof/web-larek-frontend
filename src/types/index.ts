@@ -22,14 +22,12 @@ export interface IProduct {
  * @interface IProductList
  * @param {number} total - Количество товаров.
  * @param {IProduct[]} products - Массив всех товаров.
- * @param {Function} setProducts() - Устанавливает массив товаров.
  * @param {Function} getProduct() - Возвращает товар по id.
  */
 export interface IProductList {
 	total: number;
 	products: IProduct[];
-	setProducts(): void;
-	getProduct(productId: string): IProduct;
+	getProduct(productId: string): IProduct | undefined;
 }
 
 /**
