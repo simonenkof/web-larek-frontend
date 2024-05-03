@@ -12,6 +12,6 @@ const events = new EventEmitter();
 const api = new AppApi(new Api(API_URL));
 const productList = new ProductList(events);
 const cart = new Cart(events);
-const order = new Order(events, api);
+const order = new Order(events);
 
 api.getProducts().then((products) => (productList.items = products.items));
