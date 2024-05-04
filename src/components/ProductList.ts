@@ -65,7 +65,7 @@ export class ProductList implements IProductList {
 	set items(productsArr: IProduct[]) {
 		this._items = productsArr;
 		this.total = productsArr.length;
-		this.events.emit('productList:changed');
+		this.events.emit('productList:changed', productsArr);
 	}
 
 	/**
