@@ -12,7 +12,7 @@ export class Product {
 	protected events: IEvents;
 
 	/**
-	 * Шаблон карточки товара.
+	 * Карточка товара.
 	 * @type {HTMLElement}
 	 * @protected
 	 */
@@ -61,6 +61,13 @@ export class Product {
 	protected cardButton: HTMLButtonElement | null;
 
 	/**
+	 * Идентификатор товара.
+	 * @type {string}
+	 * @protected
+	 */
+	protected _productId: string;
+
+	/**
 	 * Создает экземпляр класса.
 	 * @param {IEvents} events - Экземпляр брокера событий.
 	 * @param {HTMLTemplateElement} element - Шаблон карточки товара.
@@ -76,6 +83,22 @@ export class Product {
 		this.cardButton = this.element.querySelector('.card__button');
 
 		this.setupEventListeners();
+	}
+
+	/**
+	 * Возвращает идентификатор товара.
+	 * @returns {string} Идентификатор товара
+	 */
+	get id(): string {
+		return this._productId;
+	}
+
+	/**
+	 * Устанавливает идентификатор товара.
+	 * @param {string} newId - Идентификатор товара.
+	 */
+	set id(newId: string) {
+		this._productId = newId;
 	}
 
 	/**
@@ -127,15 +150,13 @@ export class Product {
 			this.element.addEventListener('click', () => this.handleOnProductClick());
 		}
 
-		const isDeleteButton = this.cardButton?.classList.contains('basket__item-delete');
-		const handler = isDeleteButton ? this.handleRemoveButtonClick : this.handleToCartButtonClick;
-
-		this.cardButton?.addEventListener('click', () => handler());
+		this.cardButton?.addEventListener('click', () => this.handleRemoveButtonClick());
 	}
 
 	/**
 	 * Устанавливает данные товара. В метод можно передать как часть данных о товаре, так и полностью.
 	 * @param {Partial<IProduct>} productData - Данные о товаре.
+	 * @returns {HTMLElement} Карточка товара.
 	 */
 	setData(productData: Partial<IProduct>): HTMLElement {
 		const { image, category, description, ...otherData } = productData;
@@ -146,6 +167,14 @@ export class Product {
 
 		Object.assign(this, otherData);
 
+		return this.element;
+	}
+
+	/**
+	 * Возвращает карточку товара.
+	 * @returns {HTMLElement} Карточка товара
+	 */
+	render(): HTMLElement {
 		return this.element;
 	}
 
@@ -173,12 +202,5 @@ export class Product {
 	 */
 	protected handleOnProductClick(): void {
 		this.events.emit('cardModal:open', this);
-	}
-
-	/**
-	 * Обработчик события "click" кнопки добавления товара в корзину.
-	 */
-	protected handleToCartButtonClick(): void {
-		this.events.emit('cart:add', this);
 	}
 }

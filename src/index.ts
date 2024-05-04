@@ -9,6 +9,7 @@ import { Cart } from './components/Cart';
 import { Order } from './components/Order';
 import { Product } from './components/Product';
 import { IProduct } from './types';
+import { CardModal } from './components/CardModal';
 
 const events = new EventEmitter();
 const api = new AppApi(new Api(API_URL));
@@ -25,5 +26,15 @@ events.on('productList:changed', (products: IProduct[]) => {
 		const galery = document.querySelector('.gallery');
 
 		galery.append(product.setData(productData));
+	});
+});
+
+events.on('cardModal:open', (product: Product) => {
+	api.getProductById(product.id).then((productData: IProduct) => {
+		const productTemplate: HTMLTemplateElement = document.querySelector('#card-preview');
+		const product = new Product(events, productTemplate);
+		const modal = new CardModal(events, product.setData(productData));
+
+		modal.open();
 	});
 });
