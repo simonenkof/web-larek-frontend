@@ -179,6 +179,13 @@ export class Product {
 	}
 
 	/**
+	 * Удаляет карточку товара.
+	 */
+	remove(): void {
+		this.element.remove();
+	}
+
+	/**
 	 * Обновляет цвет категории товара.
 	 * @param {HTMLSpanElement} categoryElement - Элемент категории.
 	 * @param {string} category - Категория товара.

@@ -320,7 +320,7 @@ export type ApiListResponse<Type> = {
 
 События представления:
 
-- `cartModal:open` - открытие модального окна с корзиной,
+- `basketModal:open` - открытие модального окна с корзиной,
 - `cardModal:open` - открытие модального окна с карточкой товара,
 - `deliveryModal:open` - открытие модального окна с деталями доставки и оплаты,
 - `deliveryModal:submit` - подтверждение данных доставки,

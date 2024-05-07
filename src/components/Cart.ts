@@ -11,7 +11,7 @@ export class Cart implements ICart {
 	 * @type {IProduct[]}
 	 * @protected
 	 */
-	protected _products: IProduct[];
+	protected _products: IProduct[] = [];
 
 	/**
 	 * Экземпляр брокера событий.
@@ -20,11 +20,19 @@ export class Cart implements ICart {
 	protected events: IEvents;
 
 	/**
+	 * Цена корзины товаров.
+	 * @type {number}
+	 * @protected
+	 */
+	protected _cartPrice: number;
+
+	/**
 	 * Создает экземпляр класса.
 	 * @param {IEvents} events - Экзампляр брокера событий.
 	 */
 	constructor(events: IEvents) {
 		this.events = events;
+		this._cartPrice = 0;
 	}
 
 	/**
@@ -44,12 +52,31 @@ export class Cart implements ICart {
 	}
 
 	/**
+	 * Возвращает стоимость всех товаров в корзине.
+	 * @returns {number} Стоимость товаров в корзине.
+	 */
+	get cartPrice(): number {
+		return this._cartPrice;
+	}
+
+	/**
+	 * Устанавливает стоимость товаров в корзине.
+	 * @param {number} newPrice - Стоимость товаров в корзине.
+	 */
+	set cartPrice(newPrice: number) {
+		this._cartPrice = newPrice;
+	}
+
+	/**
 	 * Добавлет товар в корзину. Генерирует событие "cart:added".
 	 * @param {IProduct} product - Товар, который нужно добавить.
 	 */
 	addProduct(product: IProduct): void {
-		this.products.push(product);
-		this.events.emit('cart:added');
+		if (product.price) {
+			this.products.push(product);
+			this.cartPrice = this.cartPrice + product.price;
+			this.events.emit('cart:updateCount', { count: this.products.length });
+		}
 	}
 
 	/**
@@ -66,6 +93,7 @@ export class Cart implements ICart {
 	 */
 	clear(): void {
 		this.products = [];
+		this.cartPrice = 0;
 		this.events.emit('cart:cleared');
 	}
 }

@@ -1,3 +1,4 @@
+import { IProduct } from '../types';
 import { Modal } from './Modal';
 import { IEvents } from './base/events';
 
@@ -26,20 +27,22 @@ export class CardModal extends Modal {
 	/**
 	 * Создает экземпляр класса.
 	 * @param {IEvents} events - Инстант брокера событий.
-	 * @param {HTMLTemplateElement} modalTemplate - Контента модального окна.
+	 * @param {HTMLElement} product - Контента модального окна.
 	 */
-	constructor(events: IEvents, modalTemplate: HTMLElement) {
-		super(modalTemplate);
+	constructor(events: IEvents, product: HTMLElement, productData: IProduct) {
+		super(product);
 		this.events = events;
 
-		this.toCartButton = modalTemplate.querySelector('card__button');
-		this.toCartButton?.addEventListener('click', this.handleToCartButtonClick);
+		this.toCartButton = product.querySelector('.card__button');
+		this.toCartButton?.addEventListener('click', () => this.handleToCartButtonClick(productData));
 	}
 
 	/**
 	 * Обработчик события "click" кнопки добавления в корзину. Генерирует событие "cart:add".
 	 */
-	handleToCartButtonClick() {
-		this.events.emit('cart:add');
+	handleToCartButtonClick(productData: IProduct) {
+		this.close();
+		this.events.emit('cart:add', productData);
+		this.events.emit('basketModal:open');
 	}
 }
