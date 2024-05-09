@@ -19,7 +19,7 @@ const cart = new Cart(events);
 const order = new Order(events);
 const basketButton = document.querySelector('.header__basket');
 
-basketButton.addEventListener('click', () => events.emit('basketModal:open'));
+basketButton.addEventListener('click', () => events.emit('cartModal:open'));
 
 api.getProducts().then((products) => (productList.items = products.items));
 
@@ -43,9 +43,8 @@ events.on('cardModal:open', (product: Product) => {
 	});
 });
 
-events.on('cart:add', (product: IProduct) => {
-	cart.addProduct(product);
-});
+events.on('cart:add', (product: IProduct) => cart.addProduct(product));
+events.on('cart:remove', (product: Product) => cart.removeProduct(product));
 
 events.on('cart:updateCount', (countData: { count: string }) => {
 	const basketCounterElement = document.querySelector('.header__basket-counter');
@@ -53,15 +52,15 @@ events.on('cart:updateCount', (countData: { count: string }) => {
 	if (basketCounterElement) basketCounterElement.textContent = countData.count;
 });
 
-events.on('basketModal:open', () => {
+events.on('cartModal:open', () => {
 	const productTemplate: HTMLTemplateElement = document.querySelector('#card-basket');
 	const cartTemplate: HTMLTemplateElement = document.querySelector('#basket');
 	const modal = new CartModal(events, cartTemplate);
 
-	cart.products.forEach((productData: IProduct, index: number) => {
+	cart.products.forEach((productData: IProduct) => {
 		if (productData.price) {
 			const productCard = new Product(events, productTemplate);
-			modal.addProduct(productCard.setData(productData), index + 1);
+			modal.addProduct(productCard.setData(productData));
 			modal.updateBasketPrice(cart.cartPrice);
 		}
 	});

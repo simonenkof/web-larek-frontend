@@ -1,3 +1,5 @@
+import { Product } from '../components/Product';
+
 /**
  * Представляет структуру товара.
  * @interface IProduct
@@ -80,7 +82,7 @@ export interface IOrderSuccess {
 export interface ICart {
 	products: IProduct[];
 	addProduct(product: IProduct): void;
-	removeProduct(productId: string): void;
+	removeProduct(product: Product): void;
 	clear(): void;
 }
 

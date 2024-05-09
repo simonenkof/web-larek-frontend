@@ -43,6 +43,6 @@ export class CardModal extends Modal {
 	handleToCartButtonClick(productData: IProduct) {
 		this.close();
 		this.events.emit('cart:add', productData);
-		this.events.emit('basketModal:open');
+		this.events.emit('cartModal:open');
 	}
 }

@@ -26,6 +26,18 @@ export class CartModal extends Modal {
 	protected basketPrice: HTMLUListElement | null;
 
 	/**
+	 * Кнопка оформления заказа.
+	 * @type {HTMLButtonElement | null}
+	 * @protected
+	 */
+	protected orderButton: HTMLButtonElement | null;
+
+	/**
+	 * Элемент модального окна корзины.
+	 */
+	protected element: HTMLElement;
+
+	/**
 	 * Создает экземпляр класса.
 	 * @param {IEvents} events - Инстант брокера событий.
 	 * @param {HTMLTemplateElement} modalTemplate - Контента модального окна.
@@ -34,21 +46,35 @@ export class CartModal extends Modal {
 		const clone = cloneTemplate(modalTemplate);
 		super(clone);
 		this.events = events;
+		this.element = clone;
 
-		this.basketList = clone.querySelector('.basket__list');
-		this.basketPrice = clone.querySelector('.basket__price');
+		this.basketList = this.element.querySelector('.basket__list');
+		this.basketPrice = this.element.querySelector('.basket__price');
+		this.orderButton = this.element.querySelector('.basket__button');
+
+		this.events.on('cart:updatePrice', (product: { price: number }) => this.updateBasketPrice(product.price));
+		this.events.on('cart:removed', (product: Product) => this.removeProduct(product));
+		this.orderButton?.addEventListener('click', () => this.handleOrderButtonClick());
 	}
 
 	/**
 	 * Добавляет товар в корзину.
 	 * @param {Product} product - Карточка товара.
 	 */
-	addProduct(product: HTMLElement, productCount: number): void {
-		const productCountElement = product.querySelector('.basket__item-index');
-
-		if (productCountElement) productCountElement.textContent = productCount.toString();
-
+	addProduct(product: HTMLElement): void {
 		this.basketList?.append(product);
+		this.updateProductsCount();
+		this.updateOrderButtonState();
+	}
+
+	/**
+	 * Удаляет товар из корзины.
+	 * @param {Product} product - Карточка товара.
+	 */
+	removeProduct(product: Product): void {
+		product.remove();
+		this.updateProductsCount();
+		this.updateOrderButtonState();
 	}
 
 	/**
@@ -60,10 +86,30 @@ export class CartModal extends Modal {
 	}
 
 	/**
-	 * Удаляет товар из корзины.
-	 * @param {Product} product - Карточка товара.
+	 * Обновляет нумерцаию товаров в корзине.
 	 */
-	removeProduct(product: Product): void {
-		product.remove();
+	updateProductsCount(): void {
+		const products: NodeListOf<HTMLLinkElement> = this.element.querySelectorAll('.basket__item');
+
+		products.forEach((product: HTMLElement, index: number) => {
+			const productCountElement = product.querySelector('.basket__item-index');
+
+			if (productCountElement) {
+				productCountElement.textContent = (index + 1).toString();
+			}
+		});
+	}
+
+	handleOrderButtonClick(): void {
+		this.events.emit('order:create');
+	}
+
+	/**
+	 * Обновляет состояние кнопки оформелния заказа.
+	 */
+	updateOrderButtonState(): void {
+		const products: NodeListOf<HTMLLinkElement> = this.element.querySelectorAll('.basket__item');
+
+		this.orderButton.disabled = products.length === 0;
 	}
 }

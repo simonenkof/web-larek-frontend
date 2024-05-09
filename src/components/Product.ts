@@ -80,7 +80,7 @@ export class Product {
 		this.categoryElement = this.element.querySelector('.card__category');
 		this.priceElement = this.element.querySelector('.card__price');
 		this.descriptionElement = this.element.querySelector('.card__text');
-		this.cardButton = this.element.querySelector('.card__button');
+		this.cardButton = this.element.querySelector('.basket__item-delete');
 
 		this.setupEventListeners();
 	}
@@ -197,10 +197,10 @@ export class Product {
 
 	/**
 	 * Обработчик события "click" кнопки удаления товара из корзины.
-	 * Генерирует событие "cart:removed".
+	 * Генерирует событие "cart:remove".
 	 */
 	protected handleRemoveButtonClick(): void {
-		this.events.emit('cart:removed', this);
+		this.events.emit('cart:remove', this);
 	}
 
 	/**

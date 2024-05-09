@@ -181,7 +181,7 @@ export type ApiListResponse<Type> = {
 Методы класса:
 
 - addProduct(product: IProduct): void - добавляет продукт в коризну. Генерирует событие "cart:added",
-- removeProduct(productId: string): void - удаляет продукт из корзины по его идентификатору. Генерирует событие "cart:removed",
+- removeProduct(productId: string): void - удаляет продукт из корзины по его идентификатору. Генерирует событие "cart:remove",
 - clear(): void - очищает корзину. Генерирует событие "cart:cleared",
 - а так же сеттеры и геттеры для сохранения и получения данных из полей класса.
 
@@ -315,12 +315,12 @@ export type ApiListResponse<Type> = {
 
 - `productList:changed` - каталог товаров изменен,
 - `cart:added` - добавление товара в корзниу,
-- `cart:removed` - удаление товара из корзины,
+- `cart:remove` - удаление товара из корзины,
 - `cart:cleared` - очищение корзниы.
 
 События представления:
 
-- `basketModal:open` - открытие модального окна с корзиной,
+- `cartModal:open` - открытие модального окна с корзиной,
 - `cardModal:open` - открытие модального окна с карточкой товара,
 - `deliveryModal:open` - открытие модального окна с деталями доставки и оплаты,
 - `deliveryModal:submit` - подтверждение данных доставки,

@@ -1,4 +1,5 @@
 import { ICart, IProduct } from '../types';
+import { Product } from './Product';
 import { IEvents } from './base/events';
 
 /**
@@ -74,18 +75,29 @@ export class Cart implements ICart {
 	addProduct(product: IProduct): void {
 		if (product.price) {
 			this.products.push(product);
-			this.cartPrice = this.cartPrice + product.price;
 			this.events.emit('cart:updateCount', { count: this.products.length });
+			this.updateCardPrice();
 		}
 	}
 
 	/**
-	 * Удаляет товар из корзину по его идентификатору. Генерирует событие "cart:removed".
-	 * @param {string} productId - Идентификатор товара.
+	 * Удаляет товар из корзину по его идентификатору. Генерирует событие "cart:remove".
+	 * @param {Product} product - Идентификатор товара.
 	 */
-	removeProduct(productId: string): void {
-		this.products = this.products.filter((product) => product.id !== productId);
-		this.events.emit('cart:removed');
+	removeProduct(product: Product): void {
+		this.products = this.products.filter((item) => item.id !== product.id);
+		this.events.emit('cart:updateCount', { count: this.products.length });
+		this.events.emit('cart:removed', product);
+		this.updateCardPrice();
+	}
+
+	/**
+	 * Обновляет стоимость товаров в корзине.
+	 */
+	updateCardPrice() {
+		this.cartPrice = 0;
+		this.products.forEach((product) => (this.cartPrice += product.price));
+		this.events.emit('cart:updatePrice', { price: this.cartPrice });
 	}
 
 	/**
