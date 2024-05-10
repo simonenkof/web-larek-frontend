@@ -45,7 +45,7 @@ export class Product {
 	 * @type {HTMLSpanElement | null}
 	 * @protected
 	 */
-	protected priceElement: HTMLSpanElement;
+	protected priceElement: HTMLSpanElement | null;
 
 	/**
 	 * Элемент описания товара.

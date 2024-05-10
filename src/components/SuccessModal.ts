@@ -49,7 +49,7 @@ export class SuccessModal extends Modal {
 		this.modalOrderPriceElement = this.element.querySelector('.order-success__description');
 		this.successButtonElement = this.element.querySelector('.button');
 
-		this.successButtonElement?.addEventListener('click', () => this.handleSuccesButtonClick());
+		this.successButtonElement?.addEventListener('click', () => this.close());
 
 		this.updateOrderPrice(orderData.total);
 	}
@@ -58,16 +58,9 @@ export class SuccessModal extends Modal {
 	 * Обновляет цену заказа.
 	 * @param {number} total - Стоимость заказа.
 	 */
-	updateOrderPrice(total: number) {
+	updateOrderPrice(total: number): void {
 		if (this.modalOrderPriceElement) {
 			this.modalOrderPriceElement.textContent = `Списано ${total} синапсов`;
 		}
-	}
-
-	/**
-	 * Обработчик события "click" кнопки модального окна. Закрывает окно.
-	 */
-	handleSuccesButtonClick() {
-		this.close();
 	}
 }

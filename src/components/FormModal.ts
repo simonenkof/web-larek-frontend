@@ -47,7 +47,7 @@ export class FormModal extends Modal {
 	protected deliveryForm: boolean;
 
 	/**
-	 * Способ оплаты..
+	 * Способ оплаты.
 	 * @type {string}
 	 * @protected
 	 */
@@ -126,7 +126,7 @@ export class FormModal extends Modal {
 	}
 
 	/**
-	 * Изменяет состояние кнопки подветрждения формы
+	 * Изменяет состояние кнопки подветрждения формы.
 	 * @param {boolean} state - Состояние.
 	 */
 	protected changeSubmitButtonState(state: boolean): void {
@@ -139,7 +139,7 @@ export class FormModal extends Modal {
 	 * Генерирует нужное событие в зависимости от текущей формы.
 	 * @param {MouseEvent} event - Объект события.
 	 */
-	handleSubmitButtonClick(event: MouseEvent) {
+	protected handleSubmitButtonClick(event: MouseEvent): void {
 		event.preventDefault();
 
 		if (this.deliveryForm) {

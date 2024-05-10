@@ -19,13 +19,6 @@ export class CardModal extends Modal {
 	protected toCartButton: HTMLButtonElement | null;
 
 	/**
-	 * Модальное окно карточки товара.
-	 * @type {HTMLElement}
-	 * @protected
-	 */
-	protected element: HTMLElement;
-
-	/**
 	 * Создает экземпляр класса.
 	 * @param {IEvents} events - Инстант брокера событий.
 	 * @param {HTMLElement} product - Контента модального окна.

@@ -166,7 +166,7 @@ export type ApiListResponse<Type> = {
 Методы класса:
 
 - getProduct(productId: string): IProduct | undefined - возвращает данные товара по его идентификатору,
-- а так же сеттеры и геттеры для сохранения и получения данных из полей класса.
+- сеттеры и геттеры для сохранения и получения данных из полей класса.
 
 #### Класс Cart
 
@@ -175,15 +175,17 @@ export type ApiListResponse<Type> = {
 
 В полях класса хранятся следующие данные:
 
-- \_products: IProduct[] - массив товаров,
+- \_items: IProduct[] - массив товаров,
+- \_cartPrice: number - цена коризны товаров,
 - events: IEvents - экземпляр класса `EventEmitter` для вызова событий при изменении данных.
 
 Методы класса:
 
 - addProduct(product: IProduct): void - добавляет продукт в коризну. Генерирует событие "cart:added",
 - removeProduct(productId: string): void - удаляет продукт из корзины по его идентификатору. Генерирует событие "cart:remove",
+- updateCardPrice(): void - обновляет стоимость товаров в корзине,
 - clear(): void - очищает корзину. Генерирует событие "cart:cleared",
-- а так же сеттеры и геттеры для сохранения и получения данных из полей класса.
+- сеттеры и геттеры для сохранения и получения данных из полей класса.
 
 #### Класс Order
 
@@ -199,8 +201,7 @@ export type ApiListResponse<Type> = {
 - \_phone: string - телефон покупателя,
 - \_address: string - адрес получателя,
 - events: IEvents - экземпляр класса `EventEmitter` для вызова событий при изменении данных,
-- api: Api - экземпляр класса `Api` для отправки заказа на сервер,
-- а так же сеттеры и геттеры для сохранения и получения данных из полей класса.
+- сеттеры и геттеры для сохранения и получения данных из полей класса.
 
 Методы класса:
 
@@ -220,25 +221,44 @@ export type ApiListResponse<Type> = {
 
 Поля класса:
 
-- productData: IProduct - информация о товаре.
 - events: IEvents - экземпляр класса `EventEmitter` для вызова событий при изменении данных,
+- productData: IProduct - информация о товаре,
+- element: HTMLElement - элемент карточки товара,
+- titleElement: HTMLSpanElement | HTMLHeadingElement - элемент названия товара,
+- imageElement: HTMLImageElement | null - элемент изображения товара,
+- categoryElement: HTMLSpanElement | null - элемент категории товара,
+- priceElement: HTMLSpanElement | null - элемент стоимости товара,
+- descriptionElement: HTMLParagraphElement | null - элемент описания товара,
+- cardButton: HTMLButtonElement | null - элемент кнопки удаления товара из корзины,
+- \_productId: string; - идентификатор товара.
 
 Методы класса:
 
-- setProductData(productData: IProduct): void - устанавливает отображение информации о товаре,
-- render(): HTMLElement - возвращает настроенный элемент карточки.
+- setData(productData: Partial<IProduct>): HTMLElement - станавливает данные товара. В метод можно передать как часть данных о товаре, так и полностью,
+- render(): HTMLElement - возвращает карточку товара,
+- remove(): void - удаляет карточку товара,
+- updateCategotyColor(categoryElement: HTMLSpanElement, category: string): void - обновляет цвет категории товара,
+- handleRemoveButtonClick(): void - обработчик события "click" кнопки удаления товара из корзины. Генерирует событие "cart:remove",
+- handleOnProductClick(): void - обработчик события "click" по карточке товара. Генерирует событие "cardModal:open".
 
 #### Класс Modal
 
 Реализует модальное окно. Предоставляется методы `open` и `close` для управления отображением модального окна.\
-Устанавливает слушателей на клавиатуру, для закрытия модального окна по Esc, на клик вне модального окна и кнопку закрытия окна.\
-Конструктор класса принимает инстанс брокера событий.\
+Устанавливает слушателей событий на клик вне модального окна и кнопку закрытия окна.\
+Конструктор класса принимает элемент содержимого модального окна.\
 
 Поля класса:
 
 - events: IEvents - экземпляр класса `EventEmitter` для вызова событий при изменении данных,
+- modal: HTMLDivElement | null - модальное окно.
+
+Методы класса:
+
+- setupEventListeners(): void - настраивает слушателей событий,
+- handleModalClick(event: MouseEvent): void - обработчик события нажатия на модальное окно. Если нажатие было вне модального окна, то закрывает его,
 - open(): void - открывает модальное окно,
-- close(): void - закрывает модальное окно.
+- close(): void - закрывает модальное окно,
+- render(): HTMLDivElement | null - возвращает модальное окно.
 
 #### Класс CardModal
 
@@ -248,57 +268,78 @@ export type ApiListResponse<Type> = {
 
 Поля класса:
 
-- product: IProduct - информация о товаре
+- product: IProduct - информация о товаре,
+- events: IEvents - экземпляр класса `EventEmitter` для вызова событий при изменении данных,
+- toCartButton: HTMLButtonElement | null - элемент кнопки "В корзину",
 
 Методы класса:
 
-- renderProduct(product: IProduct) - отображает товар,
-- moveToCart() - перемещает товар в корзину,
+- handleToCartButtonClick(productData: IProduct) - Обработчик события "click" кнопки добавления в корзину. Генерирует событие "cart:add".
 
 #### Класс CartModal
 
 Расширяет класс Modal. Предназначен для реализации модального окна с корзиной.\
 Предоставляет методы для отображения товаров и оформления заказа.
-Конструктор класса принимает массив товаров для их отображения и инстанс брокера событий.
+Конструктор класса принимает инстанс брокера событий и шаблон модального окна.
 
 Поля класса:
 
-- products: IProduct[] - массив товаров
+- events: IEvents - экземпляр класса `EventEmitter` для вызова событий при изменении данных,
+- basketList: HTMLUListElement | null - элемент списка товаров в корзине,
+- basketPrice: HTMLUListElement | null - элемент суммы товаров в корзине,
+- orderButton: HTMLButtonElement | null - кнопка оформления заказа,
+- element: HTMLElement - элемент модального окна коризны.
 
 Методы класса:
 
-- renderProducts(products: IProduct[]): void - отображает товары в корзине,
-- updateProductCount(): void - обновляет количество товаров в корзине в хедере,
-- formalize(): void - оформляет заказ,
-- handleRemoveProduct(): void - иницирует событие об удалении товара из корзины.
+- open(): void - дополняет базовую функцию открытия окна. Обновляет состояние кнопки оформления заказа перед открытием корзины,
+- addProduct(product: HTMLElement): void - добавляет товар в корзину,
+- removeProduct(product: Product): void - удаляет товар из корзины,
+- updateBasketPrice(productsPrice: number): void - обновляет цену корзины товаров,
+- updateProductsCount(): void - обновляет нумерцаию товаров в корзине,
+- handleOrderButtonClick(): void - обработчик события "click" кнопки оформления заказа. Закрывает модальное окно корзины и вызывает событие "deliveryModal:open",
+- updateOrderButtonState(): void - обновляет состояние кнопки оформелния заказа.
 
 #### Класс FormModal
 
 Расширяет класс Modal. Предназначен для реализации модальных окон с формами.\
 Предоставляет методы для изменения доступности кнопки сабмита в зависимости от правильности введенных данных.\
-Конструктор класса принимает форму для отображения, колбэк-функцию для кнопки сабмита и инстанс брокера событий.
+Конструктор класса принимает шаблон формы для отображения и инстанс брокера событий.
 
 Поля класса:
 
-- form: HMTLFormElement - элемент формы
-- inputs: NodeListOf<HTMLInputElement> - массив полей ввода.
-- submitButton: HTMLButtonElement - кнопка сабмита,
-- submitButtonCallback: Function - колбэк кнопки сабмита.
+- events: IEvents - экземпляр класса `EventEmitter` для вызова событий при изменении данных,
+- form: HTMLElement - элемент формы,
+- submitButton: HTMLButtonElement | null - кнопка отправки формы,
+- paymentButtons: NodeListOf<HTMLButtonElement> - псевдомассив кнопок выбора способа оплаты,
+- inputs: NodeListOf<HTMLInputElement> - псевдомассив полей ввода,
+- deliveryForm: boolean - флаг формы доставки и оплаты
+- payment: string - способ оплаты.
 
 Методы класса:
 
-- checkValidation(input: HTMLInputElement): boolean - проверяет валидность переданного поля ввода,
-- enableSubmitButton(): void - включает кнопку сабмита,
-- disableSubmitButton(): void - выключает кнопку сабмита.
+- handlePaymentButtonClick(event: MouseEvent): void - обработчик события 'click'. Изменяет предпочитаемый способ оплаты,
+- isPaymentSelected(): boolean - проверяет наличие выбранного способа оплаты,
+- isInputsFilled(): boolean - проверяет заполнение полей ввода,
+- changeSubmitButtonState(state: boolean): void - изменяет состояние кнопки подветрждения формы,
+- handleSubmitButtonClick(event: MouseEvent): void - jбработчик события "click" кнопки подтверждения формы. Отменяет стандартное поведение подтверждения формы. Генерирует нужное событие в зависимости от текущей формы.
 
 #### Класс SuccessOrderModal
 
 Расширяет класс Modal. Предназначен для отображения успешного заказа товаров.\
-Конструктор класса принимает инстанс брокера событий.
+Конструктор класса принимает инстанс брокера событий, шаблон модального окна и информацию об успешном заказе.
+
+Поля класса:
+
+- events: IEvents - экземпляр класса `EventEmitter` для вызова событий при изменении данных,
+- element: HTMLElement - элемент модального окна успешного заказа,
+- orderData: IOrderSuccess - данные успешного заказа,
+- modalOrderPriceElement: HTMLParagraphElement | null - элемент надписи успешного заказа,
+- successButtonElement: HTMLButtonElement | null - элемент кнопки модального окна.
 
 Методы класса:
 
-- handleSuccessButtonClick(): void - закрывает модальное окно.
+- updateOrderPrice(total: number): void - обновляет цену заказа.
 
 ---
 
@@ -311,25 +352,20 @@ export type ApiListResponse<Type> = {
 
 **Список генерируемых событий:**
 
-События изменения данных:
+В файле `eventNames.ts` описано перечисление всех существующих событий:
 
-- `productList:changed` - каталог товаров изменен,
-- `cart:added` - добавление товара в корзниу,
-- `cart:remove` - удаление товара из корзины,
-- `cart:cleared` - очищение корзниы.
-
-События представления:
-
-- `cartModal:open` - открытие модального окна с корзиной,
-- `cardModal:open` - открытие модального окна с карточкой товара,
-- `deliveryModal:open` - открытие модального окна с деталями доставки и оплаты,
-- `deliveryModal:submit` - подтверждение данных доставки,
-- `contactsModal:open` - открытие модального окна с контактными данными покупателя,
-- `contacntsModal:submit` - подтверждение данных личных контактов,
-- `order:create` - создание заказа из корзины,
-- `order:send` - оформление заказа,
-- `order:success` - успешное принятие заказа,
-- `payment:online` - выбор оплаты онлайн,
-- `payment:offline` - выбор оплаты при получении,
-- `productList:changed` - список товаров в каталоге изменен,
-- `cart:add` - добавление товара в корзину.
+```
+CartAdd = 'cart:add', // Событие добавления товара в корзину
+CartUpdateCount = 'cart:updateCount', // Событие обновление количества товаров в корзине
+CartRemoved = 'cart:removed', // Событие удаленного товара из корзины
+CartUpdatePrice = 'cart:updatePrice', // Событие обновления цены товара в корзине
+CartCleared = 'cart:cleared', // Событие очистки корзины
+CartRemove = 'cart:remove', // Событие удаления товара из корзины
+DeliveryModalOpen = 'deliveryModal:open', // Событие открытия модального окна с выбором способаоплаты и адреса доставки
+DeliveryModalSubmit = 'deliveryModal:submit', // Событие подтверждения формы оплаты и адресадоставки
+ContactsModalOpen = 'contactsModal:open', // Событие открытия модального окна с вводомконтактных данных
+ContactsModalSubmit = 'contacntsModal:submit', // Событие подтверждения формы контактных данных
+OrderSend = 'order:send', // Событие отправки заказа
+CardModalOpen = 'cardModal:open', // Событие открытия модального окна с карточкой товара
+ProductListChanged = 'productList:changed', // Событие изменения списка товаров
+```
