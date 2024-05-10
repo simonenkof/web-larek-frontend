@@ -1,6 +1,7 @@
 import { IProduct } from '../types';
 import { Modal } from './Modal';
 import { IEvents } from './base/events';
+import { EventNames } from '../utils/eventNames';
 
 export class CardModal extends Modal {
 	/**
@@ -42,6 +43,6 @@ export class CardModal extends Modal {
 	 */
 	handleToCartButtonClick(productData: IProduct) {
 		this.close();
-		this.events.emit('cart:add', productData);
+		this.events.emit(EventNames.CartAdd, productData);
 	}
 }

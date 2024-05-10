@@ -2,6 +2,7 @@ import { IEvents } from './base/events';
 import { IProduct } from '../types';
 import { cloneTemplate } from '../utils/utils';
 import { categories } from '../utils/constants';
+import { EventNames } from '../utils/eventNames';
 
 export class Product {
 	/**
@@ -200,7 +201,7 @@ export class Product {
 	 * Генерирует событие "cart:remove".
 	 */
 	protected handleRemoveButtonClick(): void {
-		this.events.emit('cart:remove', this);
+		this.events.emit(EventNames.CartRemove, this);
 	}
 
 	/**
@@ -208,6 +209,6 @@ export class Product {
 	 * Генерирует событие "cardModal:open".
 	 */
 	protected handleOnProductClick(): void {
-		this.events.emit('cardModal:open', this);
+		this.events.emit(EventNames.CardModalOpen, this);
 	}
 }

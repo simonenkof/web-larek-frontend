@@ -1,5 +1,6 @@
 import { IProduct, IProductList } from '../types';
 import { IEvents } from './base/events';
+import { EventNames } from '../utils/eventNames';
 
 /**
  * Представляет список товаров.
@@ -65,7 +66,7 @@ export class ProductList implements IProductList {
 	set items(productsArr: IProduct[]) {
 		this._items = productsArr;
 		this.total = productsArr.length;
-		this.events.emit('productList:changed', productsArr);
+		this.events.emit(EventNames.ProductListChanged, productsArr);
 	}
 
 	/**

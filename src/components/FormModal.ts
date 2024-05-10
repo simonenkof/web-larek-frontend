@@ -1,6 +1,7 @@
 import { cloneTemplate } from '../utils/utils';
 import { Modal } from './Modal';
 import { IEvents } from './base/events';
+import { EventNames } from '../utils/eventNames';
 
 export class FormModal extends Modal {
 	/**
@@ -142,11 +143,11 @@ export class FormModal extends Modal {
 		event.preventDefault();
 
 		if (this.deliveryForm) {
-			this.events.emit('deliveryModal:submit', { address: this.inputs[0].value, payment: this.payment });
+			this.events.emit(EventNames.DeliveryModalSubmit, { address: this.inputs[0].value, payment: this.payment });
 			this.close();
-			this.events.emit('contactsModal:open');
+			this.events.emit(EventNames.ContactsModalOpen);
 		} else {
-			this.events.emit('contacntsModal:submit', { email: this.inputs[0].value, phone: this.inputs[1].value });
+			this.events.emit(EventNames.ContactsModalSubmit, { email: this.inputs[0].value, phone: this.inputs[1].value });
 			this.close();
 		}
 	}

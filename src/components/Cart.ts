@@ -1,6 +1,7 @@
 import { ICart, IProduct } from '../types';
 import { Product } from './Product';
 import { IEvents } from './base/events';
+import { EventNames } from '../utils/eventNames';
 
 /**
  * Представляет корзину товаров.
@@ -75,7 +76,7 @@ export class Cart implements ICart {
 	addProduct(product: IProduct): void {
 		if (product.price) {
 			this.products.push(product);
-			this.events.emit('cart:updateCount', { count: this.products.length });
+			this.events.emit(EventNames.CartUpdateCount, { count: this.products.length });
 			this.updateCardPrice();
 		}
 	}
@@ -86,8 +87,8 @@ export class Cart implements ICart {
 	 */
 	removeProduct(product: Product): void {
 		this.products = this.products.filter((item) => item.id !== product.id);
-		this.events.emit('cart:updateCount', { count: this.products.length });
-		this.events.emit('cart:removed', product);
+		this.events.emit(EventNames.CartUpdateCount, { count: this.products.length });
+		this.events.emit(EventNames.CartRemoved, product);
 		this.updateCardPrice();
 	}
 
@@ -97,7 +98,7 @@ export class Cart implements ICart {
 	updateCardPrice() {
 		this.cartPrice = 0;
 		this.products.forEach((product) => (this.cartPrice += product.price));
-		this.events.emit('cart:updatePrice', { price: this.cartPrice });
+		this.events.emit(EventNames.CartUpdatePrice, { price: this.cartPrice });
 	}
 
 	/**
@@ -106,8 +107,8 @@ export class Cart implements ICart {
 	clear(): void {
 		this.products = [];
 		this.cartPrice = 0;
-		this.events.emit('cart:cleared');
-		this.events.emit('cart:updateCount', { count: 0 });
-		this.events.emit('cart:updatePrice', { price: 0 });
+		this.events.emit(EventNames.CartCleared);
+		this.events.emit(EventNames.CartUpdateCount, { count: 0 });
+		this.events.emit(EventNames.CartUpdatePrice, { price: 0 });
 	}
 }

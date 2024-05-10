@@ -1,5 +1,6 @@
 import { IEvents } from './base/events';
 import { IOrder } from '../types';
+import { EventNames } from '../utils/eventNames';
 
 /**
  * Представляет заказ товаров.
@@ -171,6 +172,6 @@ export class Order implements IOrder {
 			items: this.items,
 		};
 
-		this.events.emit('order:send', orderPayload);
+		this.events.emit(EventNames.OrderSend, orderPayload);
 	}
 }

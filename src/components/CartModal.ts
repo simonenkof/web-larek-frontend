@@ -2,6 +2,7 @@ import { cloneTemplate } from '../utils/utils';
 import { Modal } from './Modal';
 import { Product } from './Product';
 import { IEvents } from './base/events';
+import { EventNames } from '../utils/eventNames';
 
 export class CartModal extends Modal {
 	/**
@@ -52,8 +53,8 @@ export class CartModal extends Modal {
 		this.basketPrice = this.element.querySelector('.basket__price');
 		this.orderButton = this.element.querySelector('.basket__button');
 
-		this.events.on('cart:updatePrice', (product: { price: number }) => this.updateBasketPrice(product.price));
-		this.events.on('cart:removed', (product: Product) => this.removeProduct(product));
+		this.events.on(EventNames.CartUpdatePrice, (product: { price: number }) => this.updateBasketPrice(product.price));
+		this.events.on(EventNames.CartRemoved, (product: Product) => this.removeProduct(product));
 		this.orderButton?.addEventListener('click', () => this.handleOrderButtonClick());
 	}
 
@@ -97,7 +98,7 @@ export class CartModal extends Modal {
 	/**
 	 * Обновляет нумерцаию товаров в корзине.
 	 */
-	updateProductsCount(): void {
+	protected updateProductsCount(): void {
 		const products: NodeListOf<HTMLLinkElement> = this.element.querySelectorAll('.basket__item');
 
 		products.forEach((product: HTMLElement, index: number) => {
@@ -113,15 +114,15 @@ export class CartModal extends Modal {
 	 * Обработчик события "click" кнопки оформления заказа.
 	 * Закрывает модальное окно корзины и вызывает событие "deliveryModal:open".
 	 */
-	handleOrderButtonClick(): void {
+	protected handleOrderButtonClick(): void {
 		this.close();
-		this.events.emit('deliveryModal:open');
+		this.events.emit(EventNames.DeliveryModalOpen);
 	}
 
 	/**
 	 * Обновляет состояние кнопки оформелния заказа.
 	 */
-	updateOrderButtonState(): void {
+	protected updateOrderButtonState(): void {
 		const products: NodeListOf<HTMLLinkElement> = this.element.querySelectorAll('.basket__item');
 
 		this.orderButton.disabled = products.length === 0;
