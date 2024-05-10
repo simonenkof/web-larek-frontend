@@ -8,9 +8,11 @@ import { ProductList } from './components/ProductList';
 import { Cart } from './components/Cart';
 import { Order } from './components/Order';
 import { Product } from './components/Product';
-import { IProduct } from './types';
+import { IOrderSuccess, IProduct, TOrder } from './types';
 import { CardModal } from './components/CardModal';
 import { CartModal } from './components/CartModal';
+import { FormModal } from './components/FormModal';
+import { SuccessModal } from './components/SuccessModal';
 
 const events = new EventEmitter();
 const api = new AppApi(new Api(API_URL));
@@ -66,4 +68,47 @@ events.on('cartModal:open', () => {
 	});
 
 	modal.open();
+});
+
+events.on('deliveryModal:open', () => {
+	const formTemplate: HTMLTemplateElement = document.querySelector('#order');
+	const modal = new FormModal(events, formTemplate);
+	modal.open();
+});
+
+events.on('deliveryModal:submit', (eventDetail: { address: string; payment: string }) => {
+	order.address = eventDetail.address;
+	order.payment = eventDetail.payment;
+});
+
+events.on('contactsModal:open', () => {
+	const formTemplate: HTMLTemplateElement = document.querySelector('#contacts');
+	const modal = new FormModal(events, formTemplate);
+	modal.open();
+});
+
+events.on('contacntsModal:submit', (eventDetail: { email: string; phone: string }) => {
+	const productsIdArr: string[] = [];
+	let total = 0;
+
+	cart.products.forEach((product: IProduct) => {
+		productsIdArr.push(product.id);
+		total += product.price;
+	});
+
+	order.total = total;
+	order.items = productsIdArr;
+	order.email = eventDetail.email;
+	order.phone = eventDetail.phone;
+	order.order();
+});
+
+events.on('order:send', (order: TOrder) => {
+	api.sendOrder(order).then((response: IOrderSuccess) => {
+		cart.clear();
+
+		const orderTemplate: HTMLTemplateElement = document.querySelector('#success');
+		const modal = new SuccessModal(events, orderTemplate, response);
+		modal.open();
+	});
 });

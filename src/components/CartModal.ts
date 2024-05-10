@@ -58,6 +58,15 @@ export class CartModal extends Modal {
 	}
 
 	/**
+	 * Дополняет базовую функцию открытия окна. Обновляет состояние кнопки оформления заказа
+	 * перед открытием корзины.
+	 */
+	open(): void {
+		this.updateOrderButtonState();
+		super.open();
+	}
+
+	/**
 	 * Добавляет товар в корзину.
 	 * @param {Product} product - Карточка товара.
 	 */
@@ -100,8 +109,13 @@ export class CartModal extends Modal {
 		});
 	}
 
+	/**
+	 * Обработчик события "click" кнопки оформления заказа.
+	 * Закрывает модальное окно корзины и вызывает событие "deliveryModal:open".
+	 */
 	handleOrderButtonClick(): void {
-		this.events.emit('order:create');
+		this.close();
+		this.events.emit('deliveryModal:open');
 	}
 
 	/**

@@ -171,6 +171,6 @@ export class Order implements IOrder {
 			items: this.items,
 		};
 
-		this.events.emit('order:send', { order: orderPayload });
+		this.events.emit('order:send', orderPayload);
 	}
 }

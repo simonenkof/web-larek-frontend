@@ -107,5 +107,7 @@ export class Cart implements ICart {
 		this.products = [];
 		this.cartPrice = 0;
 		this.events.emit('cart:cleared');
+		this.events.emit('cart:updateCount', { count: 0 });
+		this.events.emit('cart:updatePrice', { price: 0 });
 	}
 }

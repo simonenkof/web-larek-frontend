@@ -97,6 +97,12 @@ export interface IModal {
 	close(): void;
 }
 
+/**
+ * Представляет структур класса для расширения базового класса API.
+ * @param {string} baseUrl - Адрес сервера.
+ * @param {Function} get<T>(uri: string): Promise<T> - GET запрос на сервер.
+ * @param {Function} post<T>(uri: string, data: object): Promise<T> - POST запрос на сервер.
+ */
 export interface IApi {
 	baseUrl: string;
 	get<T>(uri: string): Promise<T>;
