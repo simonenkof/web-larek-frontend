@@ -42,6 +42,18 @@ export class Modal implements IModal {
 	protected setupEventListeners(): void {
 		const closeButton = this.modal.querySelector('.modal__close');
 		closeButton?.addEventListener('click', () => this.close());
+		this.modal.addEventListener('click', (event: MouseEvent) => this.handleModalClick(event));
+	}
+
+	/**
+	 * Обработчик события нажатия на модальное окно. Если нажатие было вне модального окна,
+	 * то закрывает его.
+	 * @param {MouseEvent} event - Событие нажатия.
+	 */
+	protected handleModalClick(event: MouseEvent): void {
+		if (event.target === this.modal) {
+			this.close();
+		}
 	}
 
 	/**
