@@ -3,20 +3,60 @@ import { Modal } from './Modal';
 import { IEvents } from './base/events';
 
 export class FormModal extends Modal {
+	/**
+	 * Иснтанс брокера событий.
+	 * @type {IEvents}
+	 * @protected
+	 */
 	protected events: IEvents;
 
+	/**
+	 * Элемент формы.
+	 * @type {HTMLElement}
+	 * @protected
+	 */
 	protected form: HTMLElement;
 
+	/**
+	 * Кнопка сабмита.
+	 * @type {HTMLButtonElement | null}
+	 * @protected
+	 */
 	protected submitButton: HTMLButtonElement | null;
 
+	/**
+	 * Псевдомассив кнопок выбора способа оплаты.
+	 * @type {NodeListOf<HTMLButtonElement>}
+	 * @protected
+	 */
 	protected paymentButtons: NodeListOf<HTMLButtonElement>;
 
+	/**
+	 * Псевдомассив полей ввода.
+	 * @type {NodeListOf<HTMLInputElement>}
+	 * @protected
+	 */
 	protected inputs: NodeListOf<HTMLInputElement>;
 
+	/**
+	 * Флаг формы доставки и оплаты.
+	 * @type {boolean}
+	 * @protected
+	 */
 	protected deliveryForm: boolean;
 
+	/**
+	 * Способ оплаты..
+	 * @type {string}
+	 * @protected
+	 */
 	protected payment: string;
 
+	/**
+	 * Создает экземпляр класса.
+	 * @param {IEvents} events - Экземпляр брокера событий.
+	 * @param {HTMLTemplateElement} template - Шаблон формы.
+	 */
 	constructor(events: IEvents, template: HTMLTemplateElement) {
 		const clone = cloneTemplate(template);
 		super(clone);
@@ -42,7 +82,11 @@ export class FormModal extends Modal {
 		});
 	}
 
-	handlePaymentButtonClick(event: MouseEvent) {
+	/**
+	 * Обработчик события 'click'. Изменяет предпочитаемый способ оплаты.
+	 * @param {MouseEvent} event - Объект события.
+	 */
+	protected handlePaymentButtonClick(event: MouseEvent): void {
 		const button = event.target as HTMLButtonElement;
 		this.payment = button.textContent;
 
@@ -55,7 +99,11 @@ export class FormModal extends Modal {
 		this.changeSubmitButtonState(this.isPaymentSelected() && this.isInputsFilled());
 	}
 
-	isPaymentSelected(): boolean {
+	/**
+	 * Проверяет наличие выбранного способа оплаты.
+	 * @returns {boolean} true - если способ оплаты выбран. false - если нет.
+	 */
+	protected isPaymentSelected(): boolean {
 		if (this.deliveryForm) {
 			return Array.from(this.paymentButtons).some((element) => element.classList.contains('button_alt-active'));
 		} else {
@@ -63,7 +111,11 @@ export class FormModal extends Modal {
 		}
 	}
 
-	isInputsFilled(): boolean {
+	/**
+	 * Проверяет заполнение полей ввода.
+	 * @returns {boolean} true - если поля заполнены. false - если нет.
+	 */
+	protected isInputsFilled(): boolean {
 		for (let i = 0; i < this.inputs.length; i++) {
 			if (this.inputs[i].value.trim() === '') {
 				return false;
@@ -72,10 +124,20 @@ export class FormModal extends Modal {
 		return true;
 	}
 
-	changeSubmitButtonState(state: boolean) {
+	/**
+	 * Изменяет состояние кнопки подветрждения формы
+	 * @param {boolean} state - Состояние.
+	 */
+	protected changeSubmitButtonState(state: boolean): void {
 		this.submitButton.disabled = !state;
 	}
 
+	/**
+	 * Обработчик события "click" кнопки подтверждения формы.
+	 * Отменяет стандартное поведение подтверждения формы.
+	 * Генерирует нужное событие в зависимости от текущей формы.
+	 * @param {MouseEvent} event - Объект события.
+	 */
 	handleSubmitButtonClick(event: MouseEvent) {
 		event.preventDefault();
 
