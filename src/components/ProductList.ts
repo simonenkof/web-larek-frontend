@@ -1,5 +1,5 @@
 import { IProduct, IProductList } from '../types';
-import { IEvents } from './base/events';
+import { IEvents } from './base/Events';
 import { EventNames } from '../utils/eventNames';
 
 /**

@@ -1,6 +1,6 @@
 import { ICart, IProduct } from '../types';
 import { Product } from './Product';
-import { IEvents } from './base/events';
+import { IEvents } from './base/Events';
 import { EventNames } from '../utils/eventNames';
 
 /**

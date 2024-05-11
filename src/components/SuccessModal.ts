@@ -1,7 +1,7 @@
 import { IOrderSuccess } from '../types';
 import { cloneTemplate } from '../utils/utils';
 import { Modal } from './Modal';
-import { IEvents } from './base/events';
+import { IEvents } from './base/Events';
 import { ensureElement } from '../utils/utils';
 
 export class SuccessModal extends Modal {

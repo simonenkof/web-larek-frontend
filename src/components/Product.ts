@@ -1,4 +1,4 @@
-import { IEvents } from './base/events';
+import { IEvents } from './base/Events';
 import { IProduct } from '../types';
 import { cloneTemplate } from '../utils/utils';
 import { categories } from '../utils/constants';
