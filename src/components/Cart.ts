@@ -74,11 +74,20 @@ export class Cart implements ICart {
 	 * @param {IProduct} product - Товар, который нужно добавить.
 	 */
 	addProduct(product: IProduct): void {
-		if (product.price) {
+		if (product.price && !this.productInCart(product.id)) {
 			this.products.push(product);
 			this.events.emit(EventNames.CartUpdateCount, { count: this.products.length });
 			this.updateCardPrice();
 		}
+	}
+
+	/**
+	 * Определяет есть ли товар в корзине.
+	 * @param {string} productId - Идентификатор товара.
+	 * @returns {boolean} true - если товар есть в корзине, иначе false.
+	 */
+	protected productInCart(productId: string): boolean {
+		return this.products.some((item) => item.id === productId);
 	}
 
 	/**

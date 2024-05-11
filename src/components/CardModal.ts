@@ -2,6 +2,7 @@ import { IProduct } from '../types';
 import { Modal } from './Modal';
 import { IEvents } from './base/events';
 import { EventNames } from '../utils/eventNames';
+import { ensureElement } from '../utils/utils';
 
 export class CardModal extends Modal {
 	/**
@@ -13,10 +14,10 @@ export class CardModal extends Modal {
 
 	/**
 	 * Элемент кнопки "В корзину"
-	 * @type {HTMLButtonElement | null}
+	 * @type {HTMLButtonElement}
 	 * @protected
 	 */
-	protected toCartButton: HTMLButtonElement | null;
+	protected toCartButton: HTMLButtonElement;
 
 	/**
 	 * Создает экземпляр класса.
@@ -27,8 +28,9 @@ export class CardModal extends Modal {
 		super(product);
 		this.events = events;
 
-		this.toCartButton = product.querySelector('.card__button');
-		this.toCartButton?.addEventListener('click', () => this.handleToCartButtonClick(productData));
+		this.toCartButton = ensureElement<HTMLButtonElement>('.card__button');
+		this.toCartButton.addEventListener('click', () => this.handleToCartButtonClick(productData));
+		this.toCartButton.disabled = productData.price === null;
 	}
 
 	/**

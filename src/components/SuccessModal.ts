@@ -2,6 +2,7 @@ import { IOrderSuccess } from '../types';
 import { cloneTemplate } from '../utils/utils';
 import { Modal } from './Modal';
 import { IEvents } from './base/events';
+import { ensureElement } from '../utils/utils';
 
 export class SuccessModal extends Modal {
 	/**
@@ -30,14 +31,14 @@ export class SuccessModal extends Modal {
 	 * @type {HTMLParagraphElement | null}
 	 * @protected
 	 */
-	protected modalOrderPriceElement: HTMLParagraphElement | null;
+	protected modalOrderPriceElement: HTMLParagraphElement;
 
 	/**
 	 * Элемент кнопки модального окна.
 	 * @type {HTMLButtonElement | null}
 	 * @protected
 	 */
-	protected successButtonElement: HTMLButtonElement | null;
+	protected successButtonElement: HTMLButtonElement;
 
 	constructor(events: IEvents, template: HTMLTemplateElement, orderData: IOrderSuccess) {
 		const clone = cloneTemplate(template);
@@ -46,8 +47,8 @@ export class SuccessModal extends Modal {
 		this.element = clone;
 		this.orderData = orderData;
 
-		this.modalOrderPriceElement = this.element.querySelector('.order-success__description');
-		this.successButtonElement = this.element.querySelector('.button');
+		this.modalOrderPriceElement = ensureElement<HTMLParagraphElement>('.order-success__description', this.element);
+		this.successButtonElement = ensureElement<HTMLButtonElement>('.button', this.element);
 
 		this.successButtonElement?.addEventListener('click', () => this.close());
 

@@ -2,6 +2,7 @@ import { cloneTemplate } from '../utils/utils';
 import { Modal } from './Modal';
 import { IEvents } from './base/events';
 import { EventNames } from '../utils/eventNames';
+import { ensureElement } from '../utils/utils';
 
 export class FormModal extends Modal {
 	/**
@@ -23,7 +24,7 @@ export class FormModal extends Modal {
 	 * @type {HTMLButtonElement | null}
 	 * @protected
 	 */
-	protected submitButton: HTMLButtonElement | null;
+	protected submitButton: HTMLButtonElement;
 
 	/**
 	 * Псевдомассив кнопок выбора способа оплаты.
@@ -38,6 +39,13 @@ export class FormModal extends Modal {
 	 * @protected
 	 */
 	protected inputs: NodeListOf<HTMLInputElement>;
+
+	/**
+	 * Элемент ошибки валидации.
+	 * @type {HTMLElement}
+	 * @protected
+	 */
+	protected errorElement: HTMLSpanElement;
 
 	/**
 	 * Флаг формы доставки и оплаты.
@@ -66,9 +74,10 @@ export class FormModal extends Modal {
 
 		this.deliveryForm = (this.form as HTMLFormElement).name === 'order';
 
-		this.submitButton = this.form.querySelector('button[type="submit"]');
+		this.submitButton = ensureElement<HTMLButtonElement>('button[type="submit"]', this.form);
 		this.paymentButtons = this.form.querySelectorAll('.button_alt');
 		this.inputs = this.form.querySelectorAll('.form__input');
+		this.errorElement = ensureElement<HTMLSpanElement>('.form__errors', this.form);
 
 		this.submitButton.addEventListener('click', (event: MouseEvent) => this.handleSubmitButtonClick(event));
 
@@ -106,8 +115,16 @@ export class FormModal extends Modal {
 	 */
 	protected isPaymentSelected(): boolean {
 		if (this.deliveryForm) {
-			return Array.from(this.paymentButtons).some((element) => element.classList.contains('button_alt-active'));
+			const selected = Array.from(this.paymentButtons).some((element) =>
+				element.classList.contains('button_alt-active')
+			);
+
+			if (!selected) this.setErrorMessage('Выберите способ оплаты');
+
+			return selected;
 		} else {
+			this.setErrorMessage('');
+
 			return true;
 		}
 	}
@@ -119,10 +136,32 @@ export class FormModal extends Modal {
 	protected isInputsFilled(): boolean {
 		for (let i = 0; i < this.inputs.length; i++) {
 			if (this.inputs[i].value.trim() === '') {
+				switch (this.inputs[i].name) {
+					case 'address':
+						this.setErrorMessage('Заполните адрес доставки');
+						break;
+					case 'email':
+						this.setErrorMessage('Заполните почту получателя');
+						break;
+					case 'phone':
+						this.setErrorMessage('Заполните телефон получателя');
+						break;
+				}
+
 				return false;
 			}
 		}
+		this.setErrorMessage('');
+
 		return true;
+	}
+
+	/**
+	 * Устанавливает сообщение об ошибке валидации.
+	 * @param {string} message - Сообщение об ошибке.
+	 */
+	protected setErrorMessage(message: string): void {
+		this.errorElement.textContent = message;
 	}
 
 	/**

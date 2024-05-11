@@ -1,5 +1,6 @@
 import { IModal } from '../types/index';
 import { Product } from './Product';
+import { ensureElement } from '../utils/utils';
 
 export class Modal implements IModal {
 	/**
@@ -7,7 +8,7 @@ export class Modal implements IModal {
 	 * @type {HTMLDivElement}
 	 * @protected
 	 */
-	protected modal: HTMLDivElement | null;
+	protected modal: HTMLDivElement;
 
 	/**
 	 * Содержимое модального окна.
@@ -21,10 +22,10 @@ export class Modal implements IModal {
 	 * @param {HTMLDivElement | Product} modalContent - Содержимое модального окна.
 	 */
 	constructor(modalContent: HTMLDivElement | HTMLElement) {
-		this.modal = document.querySelector('#modal-container');
+		this.modal = ensureElement<HTMLDivElement>('#modal-container');
 		this.modalContent = modalContent;
 
-		const modalContentContainer = this.modal?.querySelector('.modal__content');
+		const modalContentContainer = this.modal.querySelector('.modal__content');
 
 		if (this.modalContent instanceof Product) {
 			modalContentContainer?.append(this.modalContent.render());
@@ -40,8 +41,8 @@ export class Modal implements IModal {
 	 * @protected
 	 */
 	protected setupEventListeners(): void {
-		const closeButton = this.modal.querySelector('.modal__close');
-		closeButton?.addEventListener('click', () => this.close());
+		const closeButton = ensureElement<HTMLButtonElement>('.modal__close');
+		closeButton.addEventListener('click', () => this.close());
 		this.modal.addEventListener('click', (event: MouseEvent) => this.handleModalClick(event));
 	}
 
@@ -75,9 +76,9 @@ export class Modal implements IModal {
 
 	/**
 	 * Возвращает модальное окно.
-	 * @returns {HTMLDivElement | null} Модальное окно
+	 * @returns {HTMLDivElement} Модальное окно
 	 */
-	render(): HTMLDivElement | null {
+	render(): HTMLDivElement {
 		return this.modal;
 	}
 }

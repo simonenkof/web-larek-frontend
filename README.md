@@ -182,6 +182,7 @@ export type ApiListResponse<Type> = {
 Методы класса:
 
 - addProduct(product: IProduct): void - добавляет продукт в коризну. Генерирует событие "cart:added",
+- productInCart(productId: string): boolean - определяет есть ли товар в корзине,
 - removeProduct(productId: string): void - удаляет продукт из корзины по его идентификатору. Генерирует событие "cart:remove",
 - updateCardPrice(): void - обновляет стоимость товаров в корзине,
 - clear(): void - очищает корзину. Генерирует событие "cart:cleared",
@@ -250,7 +251,7 @@ export type ApiListResponse<Type> = {
 Поля класса:
 
 - events: IEvents - экземпляр класса `EventEmitter` для вызова событий при изменении данных,
-- modal: HTMLDivElement | null - модальное окно.
+- modal: HTMLDivElement - модальное окно.
 
 Методы класса:
 
@@ -258,7 +259,7 @@ export type ApiListResponse<Type> = {
 - handleModalClick(event: MouseEvent): void - обработчик события нажатия на модальное окно. Если нажатие было вне модального окна, то закрывает его,
 - open(): void - открывает модальное окно,
 - close(): void - закрывает модальное окно,
-- render(): HTMLDivElement | null - возвращает модальное окно.
+- render(): HTMLDivElement - возвращает модальное окно.
 
 #### Класс CardModal
 
@@ -270,7 +271,7 @@ export type ApiListResponse<Type> = {
 
 - product: IProduct - информация о товаре,
 - events: IEvents - экземпляр класса `EventEmitter` для вызова событий при изменении данных,
-- toCartButton: HTMLButtonElement | null - элемент кнопки "В корзину",
+- toCartButton: HTMLButtonElement - элемент кнопки "В корзину",
 
 Методы класса:
 
@@ -285,9 +286,9 @@ export type ApiListResponse<Type> = {
 Поля класса:
 
 - events: IEvents - экземпляр класса `EventEmitter` для вызова событий при изменении данных,
-- basketList: HTMLUListElement | null - элемент списка товаров в корзине,
-- basketPrice: HTMLUListElement | null - элемент суммы товаров в корзине,
-- orderButton: HTMLButtonElement | null - кнопка оформления заказа,
+- basketList: HTMLUListElement - элемент списка товаров в корзине,
+- basketPrice: HTMLUListElement - элемент суммы товаров в корзине,
+- orderButton: HTMLButtonElement - кнопка оформления заказа,
 - element: HTMLElement - элемент модального окна коризны.
 
 Методы класса:
@@ -310,9 +311,10 @@ export type ApiListResponse<Type> = {
 
 - events: IEvents - экземпляр класса `EventEmitter` для вызова событий при изменении данных,
 - form: HTMLElement - элемент формы,
-- submitButton: HTMLButtonElement | null - кнопка отправки формы,
+- submitButton: HTMLButtonElement - кнопка отправки формы,
 - paymentButtons: NodeListOf<HTMLButtonElement> - псевдомассив кнопок выбора способа оплаты,
 - inputs: NodeListOf<HTMLInputElement> - псевдомассив полей ввода,
+- errorElement: HTMLSpanElement - элемент ошибки валидации,
 - deliveryForm: boolean - флаг формы доставки и оплаты
 - payment: string - способ оплаты.
 
@@ -321,6 +323,7 @@ export type ApiListResponse<Type> = {
 - handlePaymentButtonClick(event: MouseEvent): void - обработчик события 'click'. Изменяет предпочитаемый способ оплаты,
 - isPaymentSelected(): boolean - проверяет наличие выбранного способа оплаты,
 - isInputsFilled(): boolean - проверяет заполнение полей ввода,
+- setErrorMessage(message: string): void - устанавливает сообщение об ошибки валидации,
 - changeSubmitButtonState(state: boolean): void - изменяет состояние кнопки подветрждения формы,
 - handleSubmitButtonClick(event: MouseEvent): void - jбработчик события "click" кнопки подтверждения формы. Отменяет стандартное поведение подтверждения формы. Генерирует нужное событие в зависимости от текущей формы.
 
@@ -334,8 +337,8 @@ export type ApiListResponse<Type> = {
 - events: IEvents - экземпляр класса `EventEmitter` для вызова событий при изменении данных,
 - element: HTMLElement - элемент модального окна успешного заказа,
 - orderData: IOrderSuccess - данные успешного заказа,
-- modalOrderPriceElement: HTMLParagraphElement | null - элемент надписи успешного заказа,
-- successButtonElement: HTMLButtonElement | null - элемент кнопки модального окна.
+- modalOrderPriceElement: HTMLParagraphElement - элемент надписи успешного заказа,
+- successButtonElement: HTMLButtonElement - элемент кнопки модального окна.
 
 Методы класса:
 

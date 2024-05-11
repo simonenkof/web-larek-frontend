@@ -1,14 +1,16 @@
 import './scss/styles.scss';
 
+import { IOrderSuccess, IProduct, TOrder } from './types';
+import { ensureElement } from './utils/utils';
+import { API_URL } from './utils/constants';
 import { EventEmitter } from './components/base/events';
 import { Api } from './components/base/api';
 import { AppApi } from './components/AppApi';
-import { API_URL } from './utils/constants';
+import { Page } from './components/Page';
 import { ProductList } from './components/ProductList';
 import { Cart } from './components/Cart';
 import { Order } from './components/Order';
 import { Product } from './components/Product';
-import { IOrderSuccess, IProduct, TOrder } from './types';
 import { CardModal } from './components/CardModal';
 import { CartModal } from './components/CartModal';
 import { FormModal } from './components/FormModal';
@@ -19,30 +21,24 @@ const api = new AppApi(new Api(API_URL));
 const productList = new ProductList(events);
 const cart = new Cart(events);
 const order = new Order(events);
-const basketButton = document.querySelector('.header__basket');
+new Page(events);
 
-basketButton.addEventListener('click', () => events.emit('cartModal:open'));
+const cardPreviewTemplate = ensureElement<HTMLTemplateElement>('#card-preview');
+const cardBasketTemplate = ensureElement<HTMLTemplateElement>('#card-basket');
+const basketTemplate = ensureElement<HTMLTemplateElement>('#basket');
+const orderTemplate = ensureElement<HTMLTemplateElement>('#success');
 
-api.getProducts().then((products) => (productList.items = products.items));
-
-events.on('productList:changed', (products: IProduct[]) => {
-	products.forEach((productData: IProduct) => {
-		const productTemplate: HTMLTemplateElement = document.querySelector('#card-catalog');
-		const product = new Product(events, productTemplate);
-		const galery = document.querySelector('.gallery');
-
-		galery.append(product.setData(productData));
-	});
-});
+api
+	.getProducts()
+	.then((products) => (productList.items = products.items))
+	.catch((err) => console.error(err));
 
 events.on('cardModal:open', (product: Product) => {
-	api.getProductById(product.id).then((productData: IProduct) => {
-		const productTemplate: HTMLTemplateElement = document.querySelector('#card-preview');
-		const product = new Product(events, productTemplate);
-		const modal = new CardModal(events, product.setData(productData), productData);
+	const productData = productList.getProduct(product.id);
+	const productItem = new Product(events, cardPreviewTemplate);
+	const modal = new CardModal(events, productItem.setData(productData), productData);
 
-		modal.open();
-	});
+	modal.open();
 });
 
 events.on('cart:add', (product: IProduct) => cart.addProduct(product));
@@ -55,13 +51,11 @@ events.on('cart:updateCount', (countData: { count: string }) => {
 });
 
 events.on('cartModal:open', () => {
-	const productTemplate: HTMLTemplateElement = document.querySelector('#card-basket');
-	const cartTemplate: HTMLTemplateElement = document.querySelector('#basket');
-	const modal = new CartModal(events, cartTemplate);
+	const modal = new CartModal(events, basketTemplate);
 
 	cart.products.forEach((productData: IProduct) => {
 		if (productData.price) {
-			const productCard = new Product(events, productTemplate);
+			const productCard = new Product(events, cardBasketTemplate);
 			modal.addProduct(productCard.setData(productData));
 			modal.updateBasketPrice(cart.cartPrice);
 		}
@@ -104,11 +98,13 @@ events.on('contacntsModal:submit', (eventDetail: { email: string; phone: string 
 });
 
 events.on('order:send', (order: TOrder) => {
-	api.sendOrder(order).then((response: IOrderSuccess) => {
-		cart.clear();
+	api
+		.sendOrder(order)
+		.then((response: IOrderSuccess) => {
+			cart.clear();
 
-		const orderTemplate: HTMLTemplateElement = document.querySelector('#success');
-		const modal = new SuccessModal(events, orderTemplate, response);
-		modal.open();
-	});
+			const modal = new SuccessModal(events, orderTemplate, response);
+			modal.open();
+		})
+		.catch((err) => console.error(err));
 });

@@ -3,6 +3,7 @@ import { Modal } from './Modal';
 import { Product } from './Product';
 import { IEvents } from './base/events';
 import { EventNames } from '../utils/eventNames';
+import { ensureElement } from '../utils/utils';
 
 export class CartModal extends Modal {
 	/**
@@ -17,21 +18,21 @@ export class CartModal extends Modal {
 	 * @type {HTMLUListElement | null}
 	 * @protected
 	 */
-	protected basketList: HTMLUListElement | null;
+	protected basketList: HTMLUListElement;
 
 	/**
 	 * Элемент суммы товаров в корзине.
 	 * @type {HTMLUListElement | null}
 	 * @protected
 	 */
-	protected basketPrice: HTMLUListElement | null;
+	protected basketPrice: HTMLSpanElement;
 
 	/**
 	 * Кнопка оформления заказа.
 	 * @type {HTMLButtonElement | null}
 	 * @protected
 	 */
-	protected orderButton: HTMLButtonElement | null;
+	protected orderButton: HTMLButtonElement;
 
 	/**
 	 * Элемент модального окна корзины.
@@ -49,13 +50,13 @@ export class CartModal extends Modal {
 		this.events = events;
 		this.element = clone;
 
-		this.basketList = this.element.querySelector('.basket__list');
-		this.basketPrice = this.element.querySelector('.basket__price');
-		this.orderButton = this.element.querySelector('.basket__button');
+		this.basketList = ensureElement<HTMLUListElement>('.basket__list');
+		this.basketPrice = ensureElement<HTMLSpanElement>('.basket__price');
+		this.orderButton = ensureElement<HTMLButtonElement>('.basket__button');
 
 		this.events.on(EventNames.CartUpdatePrice, (product: { price: number }) => this.updateBasketPrice(product.price));
 		this.events.on(EventNames.CartRemoved, (product: Product) => this.removeProduct(product));
-		this.orderButton?.addEventListener('click', () => this.handleOrderButtonClick());
+		this.orderButton.addEventListener('click', () => this.handleOrderButtonClick());
 	}
 
 	/**
@@ -72,7 +73,7 @@ export class CartModal extends Modal {
 	 * @param {Product} product - Карточка товара.
 	 */
 	addProduct(product: HTMLElement): void {
-		this.basketList?.append(product);
+		this.basketList.append(product);
 		this.updateProductsCount();
 		this.updateOrderButtonState();
 	}
@@ -92,7 +93,7 @@ export class CartModal extends Modal {
 	 * @param {number} productsPrice - Цена товаров в корзине.
 	 */
 	updateBasketPrice(productsPrice: number): void {
-		if (this.basketPrice) this.basketPrice.textContent = productsPrice.toString() + ' синаспов';
+		this.basketPrice.textContent = productsPrice.toString() + ' синапсов';
 	}
 
 	/**
@@ -102,7 +103,7 @@ export class CartModal extends Modal {
 		const products: NodeListOf<HTMLLinkElement> = this.element.querySelectorAll('.basket__item');
 
 		products.forEach((product: HTMLElement, index: number) => {
-			const productCountElement = product.querySelector('.basket__item-index');
+			const productCountElement = ensureElement<HTMLSpanElement>('.basket__item-index', product);
 
 			if (productCountElement) {
 				productCountElement.textContent = (index + 1).toString();

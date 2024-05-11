@@ -3,6 +3,7 @@ import { IProduct } from '../types';
 import { cloneTemplate } from '../utils/utils';
 import { categories } from '../utils/constants';
 import { EventNames } from '../utils/eventNames';
+import { CDN_URL } from '../utils/constants';
 
 export class Product {
 	/**
@@ -115,7 +116,7 @@ export class Product {
 	 * @param {string} newImage - Изображение товара.
 	 */
 	set image(newImage: string) {
-		this.imageElement.src = newImage;
+		this.imageElement.src = CDN_URL + newImage;
 	}
 
 	/**
